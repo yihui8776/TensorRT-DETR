@@ -50,7 +50,8 @@ def engine_infer(engine,context,inputs, outputs, bindings, stream,test_image):
     # print(scores)
     # print(boxs)
 
-    output_shapes =  [(1,100,22), (1,100,4)]
+    #output_shapes =  [(1,100,22), (1,100,4)]
+    output_shapes = [(1, 100, 37), (1, 100, 4)]
     scores = scores.reshape(output_shapes[0])
     boxs = boxs.reshape(output_shapes[1])
 
