@@ -111,14 +111,15 @@ def build_engine_onnx(model_file,engine_file,FP16=False,verbose=False,dynamic_in
         with trt.Builder(TRT_LOGGER) as builder, builder.create_network(EXPLICIT_BATCH) as network, builder.create_builder_config() as config,\
             trt.OnnxParser(network,TRT_LOGGER) as parser:
             # Workspace size is the maximum amount of memory available to the builder while building an engine.
-            builder.max_workspace_size = 6 << 30 # 6G
-            builder.max_batch_size = batch_size
-            # config.max_batch_size = 2
+            #builder.max_workspace_size = 6 << 30 # 6G
+            config.max_workspace_size = (1 << 30)   #for trt8
+            config.max_batch_size = batch_size      #for trt8
+            #builder.max_batch_size = batch_size
 
             if FP16:
                 print("[INFO] Open FP16 Mode!")
-                # config.set_flag(tensorrt.BuilderFlag.FP16)
-                builder.fp16_mode = True
+                config.set_flag(tensorrt.BuilderFlag.FP16)  # for trt8
+                #builder.fp16_mode = True    #trt7
 
             with open(model_file, 'rb') as model:
                 parser.parse(model.read())
@@ -135,7 +136,8 @@ def build_engine_onnx(model_file,engine_file,FP16=False,verbose=False,dynamic_in
                 config.add_optimization_profile(profile)
 
             # builder engine
-            engine = builder.build_cuda_engine(network)
+            #engine = builder.build_cuda_engine(network)   #trt 7
+            engine = builder.build_engine(network, config)  #trt8
             print("[INFO] Completed creating Engine!")
             with open(engine_file, "wb") as f:
                 f.write(engine.serialize())
@@ -172,18 +174,22 @@ def build_engine_onnx_v2(onnx_file_path="", engine_file_path="",fp16_mode=False,
             print(f'[INFO] Building an engine from file {onnx_file_path}; this may take a while...')        
             
             # build trt engine
-            builder.max_batch_size = max_batch_size
             # config.max_workspace_size = 2 << 30 # 2GB
-            builder.max_workspace_size = 2 << 30 # 2GB
-            builder.fp16_mode = fp16_mode
+            builder.max_batch_size = max_batch_size
+            config.max_workspace_size = 2 << 30  # 2GB
+
+            if fp16_mode:
+                config.set_flag(trt.BuilderFlag.FP16)
+
             if int8_mode:
-                builder.int8_mode = int8_mode
-                # config.set_flag(trt.BuilderFlag.INT8)
+                #builder.int8_mode = int8_mode
+                config.set_flag(trt.BuilderFlag.INT8)
                 assert calibration_stream, '[Error] a calibration_stream should be provided for int8 mode'
                 config.int8_calibrator  = Calibrator(calibration_stream, calibration_table_path)
                 # builder.int8_calibrator  = Calibrator(calibration_stream, calibration_table_path)
                 print('[INFO] Int8 mode enabled')
-            engine = builder.build_cuda_engine(network) 
+            #engine = builder.build_cuda_engine(network)
+            engine = builder.build_engine(network, config)
             if engine is None:
                 print('[INFO] Failed to create the engine')
                 return None   
