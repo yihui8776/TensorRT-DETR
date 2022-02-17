@@ -26,9 +26,77 @@ matplotlib.use('Agg')
 import cupy as cp
 
 
-CLASSES = ["NA","Class A","Class B","Class C","Class D","Class E","Class F",
-        "Class G","Class H","Class I","Class J","Class K","Class L","Class M",
-        "Class N","Class O","Class P","Class Q","Class R","Class S","Class T","Class U"]
+# CLASSES = ["NA","Class A","Class B","Class C","Class D","Class E","Class F",
+#         "Class G","Class H","Class I","Class J","Class K","Class L","Class M",
+#         "Class N","Class O","Class P","Class Q","Class R","Class S","Class T","Class U"]
+CLASSES = ['NA','hat',  'person',
+
+    'hand',
+
+    'insulating_gloves',
+
+    'workclothes_clothes',
+
+    'workclothes_trousers',
+
+    'winter_clothes',
+
+    'winter_trousers',
+
+    'vest',
+
+    'noworkclothes_clothes',
+
+    'noworkclothes_trousers',
+
+    'roll_workclothes',
+
+    'roll_shirts',
+
+    'roll_noworkclothes',
+
+    'shorts',
+
+    'safteybelt',
+
+    'work_men',
+
+    'stranger_men',
+
+    'down',
+
+    'smoking',
+
+    'big_smoking',
+
+    'height',
+
+    'noheight',
+
+    'holes',
+
+    'fence',
+
+    'oxygen_vertically',
+
+    'oxygen_horizontally',
+
+    'single_ladder',
+
+    'double_ladder',
+
+    'fire',
+
+    'gas_tank',
+
+    'extinguisher',
+
+    'groundrod',
+
+    'big_smoking',
+
+    'bottle' ]
+
 
 COLORS = [[0.000, 0.447, 0.741], [0.850, 0.325, 0.098], [0.929, 0.694, 0.125],
           [0.494, 0.184, 0.556], [0.466, 0.674, 0.188], [0.301, 0.745, 0.933]]
